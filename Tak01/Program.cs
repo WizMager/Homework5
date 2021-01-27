@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Tak01
@@ -18,56 +19,67 @@ namespace Tak01
             var input = Console.ReadLine();
             Console.WriteLine(LoginNotReg(input));
             Console.ReadKey();
+            Console.Clear();
 
+            Console.WriteLine("Введите пароль длиной 2-10 символов, содержащий только буквы латинского алфавита или цифры(цифра не может быть первой): ");
+            input = Console.ReadLine();
+            Console.WriteLine(LoginReg(input));
+            Console.ReadKey();
         }
 
+        #region Task 1.1(a)
         static string LoginNotReg(string inpText)
         {
-            var flag = false;
-            string inputText = inpText.ToLower();
-            string result = "";
-            char[] inputString = inputText.ToCharArray();
-
-            for (int i = 0; i < inputString.Length; i++)
+            if (inpText.Length >= 2 && inpText.Length <= 10)
             {
-                if (Char.IsDigit(inputString[0]))
-                {
-                    Console.WriteLine("Во введённом пароле первый символ - число.");
-                    flag = false;
-                }
-                if (CharCheck(inputString[i]))
-                {
-                    flag = true;
-                }
-                else
-                {
-                    flag = false;
-                }    
-            }
+                string inputText = inpText.ToLower();
+                char[] inputString = inputText.ToCharArray();
 
-            if (flag)
-            {
-                result = "Вы ввели подходящий пароль.";
+                for (int i = 0; i < inputString.Length; i++)
+                {
+                    if (Char.IsDigit(inputString[0]))
+                    {
+                        return "Во введённом пароле первый символ - число.";
+                    }
+                    if (!CharCheck(inputString[i]))
+                        return "Вы ввели пароль, не подходящий по критериям.";
+                }
+                return "Вы ввели подходящий пароль.";
             }
             else
             {
-                result = "Вы ввели пароль, не подходящий по критериям.";
+                return "Ваш пароль либо меньше 2 сиволов, либо больше 10.";
             }
-
-            return result;
         }
 
         static bool CharCheck(char inpChar)
         {
+            bool flag = false;
             string template = "qwertyuiopasdfghjklzxcvbnm1234567890";
             foreach (var temp in template)
             {
-                if (temp != inpChar)
+                if (temp == inpChar)
                 {
-                    return false;
+                    flag = true;
                 }
             }
-            return true;
+            return flag;
         }
+
+        #endregion
+
+        #region Task 1.2(b)
+        static string LoginReg(string inpText)
+        {
+            var result = "Вы ввели не подходящий по критериям пароль.";
+            if (inpText.Length >= 2 && inpText.Length <= 10)
+            {
+                Regex template = new Regex(@"^\D[A-Za-z0-9]");
+                if (template.IsMatch(inpText))
+                    result = "Вы ввели подходящий по критериям пароль.";
+            }
+            return result;
+        }
+        #endregion
     }
 }
