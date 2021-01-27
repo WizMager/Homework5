@@ -22,25 +22,25 @@ namespace Task02
             // Во второй задаче просто удалил неподходящие слова из текста. Не слишком понятно какой вариант нужно было делать просто =)
 
             string text = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "Text.txt");
-            Message message = new Message(text);
+            Message message = new Message();
 
             Console.WriteLine(text);
             Console.WriteLine();
 
             Console.WriteLine(@"\/Вывод слов, которые содержать не более n(4) букв...\/");
-            Console.WriteLine(message.LimitedWords(4));
+            Console.WriteLine(message.LimitedWords(text, 4));
             Console.WriteLine();
 
             Console.WriteLine(@"\/Удаление всех слов, которые заканчиваются на заданный символ(а)...\/");
-            Console.WriteLine(message.RemoveLastSymbWords('а'));
+            Console.WriteLine(message.RemoveLastSymbWords(text, 'а'));
             Console.WriteLine();
 
             Console.WriteLine(@"\/Вывод самого длинного слова...\/");
-            Console.WriteLine(message.LongestWord());
+            Console.WriteLine(message.LongestWord(text));
             Console.WriteLine();
 
             Console.WriteLine(@"\/Вывод самых длинных слов с помощью StringBulder'а...\/");
-            StringBuilder stringBuilder = message.LongestWords();
+            StringBuilder stringBuilder = message.LongestWords(text);
             Console.WriteLine(stringBuilder.ToString());
 
             Console.ReadKey();
@@ -49,17 +49,11 @@ namespace Task02
 
     public class Message
     {
-        string Text;
-        public Message(string text)
-        {
-            Text = text;
-        }
-
         #region Task2.1(а)
-        public string LimitedWords(int letters)
+        public string LimitedWords(string text,int letters)
         {
             StringBuilder res = new StringBuilder();
-            string[] result = SeparateInputText();
+            string[] result = SeparateInputText(text);
             for (int i = 0; i < result.Length; i++)
             {
                 if (result[i].Length <= letters)
@@ -70,10 +64,10 @@ namespace Task02
         #endregion
 
         #region Task2.2(б)
-        public string RemoveLastSymbWords(char ch)
+        public string RemoveLastSymbWords(string text, char ch)
         {
-            string result = Text;
-            string[] delWords = SeparateInputText();
+            string result = text;
+            string[] delWords = SeparateInputText(text);
             for (int i = 0; i < delWords.Length; i++)
             {
                 if (delWords[i].LastIndexOf(ch) == delWords[i].Length - 1)
@@ -84,12 +78,12 @@ namespace Task02
         #endregion
 
         #region Task 2.3(в)
-        public string LongestWord()
+        public string LongestWord(string text)
         {
             int longestWordsCounter = 0;
             int longestWordIndex = 0;
             int wordLength = 0;
-            string[] tempText = SeparateInputText();
+            string[] tempText = SeparateInputText(text);
             for (int i = 0; i < tempText.Length; i++)
             {
                 if(tempText[i].Length > wordLength)
@@ -109,10 +103,10 @@ namespace Task02
         #endregion
 
         #region Task 2.4(г)
-        public StringBuilder LongestWords()
+        public StringBuilder LongestWords(string text)
         {
             StringBuilder stringBuilder = new StringBuilder();
-            string[] sepText = SeparateInputText();
+            string[] sepText = SeparateInputText(text);
             int longestWordLenght = 0;
 
             for (int i = 0; i < sepText.Length; i++)
@@ -134,10 +128,10 @@ namespace Task02
         /// Separate input string text to string array with separators: ' ', ',', '.', '!', '?', '-', ':', ';' .
         /// </summary>
         /// <returns>string[]</returns>
-        string[] SeparateInputText()
+        string[] SeparateInputText(string text)
         {
             char[] separator = { ' ', ',', '.', '!', '?', '-', ':', ';' };
-            string[] result = Text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
+            string[] result = text.Split(separator, StringSplitOptions.RemoveEmptyEntries);
             return result;
         }
     }
