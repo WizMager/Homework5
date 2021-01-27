@@ -35,11 +35,10 @@ namespace Task03
         static void IsChanged(string str1, string str2)
         {
             if (str1.Length == str2.Length) {
-                string reg = "[" + str1 + "]";
-                Regex regex = new Regex(reg);
+                var string1 = Sort(str1);
+                var string2 = Sort(str2);
 
-
-                if (regex.IsMatch(str2))
+                if (string1 == string2)
                 {
                     Console.WriteLine("Строки схожие.");
                 }
@@ -55,6 +54,18 @@ namespace Task03
             }
 
 
+        }
+
+        static string Sort(string str)
+        {
+            string result = "";
+            var strChar = str.ToCharArray();
+            Array.Sort(strChar);
+            for (int i = 0; i < strChar.Length; i++)
+            {
+                result += strChar[i];
+            }
+            return result;
         }
         #endregion
 
