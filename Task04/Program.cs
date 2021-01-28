@@ -23,15 +23,13 @@ namespace Task04
 
     class Program
     {
-        // Добавление до 3-х человек не сделал, уже позздно было =) Возможно успею сделать(хочется ещё 5-ую решить). Если этот комент не убрал - знач не сделал.
-        //P.S. В целом всё работает, но людей может быть меньше 3-х(минимум 1 будет всегда)
         static void Main(string[] args)
         {
             string path = AppDomain.CurrentDomain.BaseDirectory + "GradesList.txt";
 
             var pupils = FillPupilsList(path);
             var indexLowestGrade = LowestGrade(pupils);
-            Console.WriteLine("Список учеников с самым низким средним балом:");
+            Console.WriteLine("Список учеников с самым низким средним баллом:");
             PrintNames(indexLowestGrade, pupils);
             Console.ReadKey();
         }
@@ -47,7 +45,7 @@ namespace Task04
                 pupil = streamReader.ReadLine().Split(' ');
                 for (int j = 0; j < pupil.Length; j++)
                 {
-                    pupils[i,j] = pupil[j];
+                    pupils[i, j] = pupil[j];
                 }
             }
             streamReader.Close();
@@ -70,7 +68,7 @@ namespace Task04
                 {
                     lowestGrade = averageGrade[i];
                 }
-                    
+
             }
             string indexString = "";
             for (int i = 0; i < averageGrade.Length; i++)
@@ -79,30 +77,20 @@ namespace Task04
                 {
                     indexString += i.ToString() + " ";
                     lowestGradePupils++;
-                }   
+                }
             }
-            //float lowerGrade = lowestGrade + 1f;
-            //if(lowestGradePupils < 3)
-            //{
-            //    for (int i = 0; i < averageGrade.Length; i++)
-            //    {
-            //        if(lowerGrade < lowestGrade)
-            //        {
-            //            lowerGrade = averageGrade[i];
-            //        }
-            //    }
-            //}
-            //for (int i = 0; i < averageGrade.Length; i++)
-            //{
-            //    if (lowerGrade == averageGrade[i])
-            //    {
-            //        indexString += i.ToString() + " ";
-            //        lowestGradePupils++;
-            //    }
-            //}
-            char[] sep = { ' '};
+            
+            var averageGradeSort = new float[averageGrade.Length];
+            for (int i = 0; i < averageGrade.Length; i++)
+            {
+                averageGradeSort[i] = averageGrade[i];
+            }
+            Array.Sort(averageGradeSort);
+
+            AddNewPupils(averageGrade, averageGradeSort, ref lowestGradePupils, ref lowestGrade, ref indexString);
+
+            char[] sep = { ' ' };
             var strIndex = indexString.Split(sep, StringSplitOptions.RemoveEmptyEntries);
-            //Array.Sort(strIndex);
             int[] index = new int[strIndex.Length];
             for (int i = 0; i < strIndex.Length; i++)
             {
@@ -117,6 +105,51 @@ namespace Task04
             {
                 var ind = index[i];
                 Console.WriteLine(pupils[ind, 0] + " " + pupils[ind, 1] + "(" + pupils[ind, 2] + " " + pupils[ind, 3] + " " + pupils[ind, 4] + ")");
+            }
+        }
+
+        static void AddNewPupils(float[] averageGrade, float[] averageGradeSort, ref int lowestGradePupils, ref float lowestGrade, ref string indexString)
+        {
+            float lowerGrade = 0;
+            if (lowestGradePupils < 3)
+            {
+                for (int i = 0; i < averageGradeSort.Length; i++)
+                {
+                    if (lowestGrade != averageGradeSort[i])
+                    {
+                        lowerGrade = averageGradeSort[i];
+                        break;
+                    }
+                }
+                for (int i = 0; i < averageGrade.Length; i++)
+                {
+                    if (lowerGrade == averageGrade[i])
+                    {
+                        indexString += i.ToString() + " ";
+                        lowestGradePupils++;
+                    }
+                }
+
+                if (lowestGradePupils < 3)
+                {
+                    for (int i = 0; i < averageGradeSort.Length; i++)
+                    {
+                        if (lowestGrade != averageGradeSort[i] && lowerGrade != averageGradeSort[i])
+                        {
+                            lowerGrade = averageGradeSort[i];
+                            break;
+                        }
+                    }
+                    for (int i = 0; i < averageGrade.Length; i++)
+                    {
+                        if (lowerGrade == averageGrade[i])
+                        {
+                            indexString += i.ToString() + " ";
+                            lowestGradePupils++;
+                        }
+                    }
+
+                }
             }
         }
     }
